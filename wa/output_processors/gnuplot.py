@@ -18,7 +18,7 @@
 #   This is an extension of work done for the auto-generation of plots from SPEC results
 
 from wa import Parameter, OutputProcessor
-from wa.framework.exception import ConfigError, OutputProcessorError
+from wa.framework.exception import ConfigError
 from wa.utils.types import list_of_strings
 import subprocess
 
@@ -51,12 +51,14 @@ class GNUPlotProcessor(OutputProcessor):
         
     # pylint: disable=unused-argument
     def process_job_output(self, output, target_info, run_output):
-        # Pass through to csvproc
-        super(GNUPlotProcessor, self).process_job_output(output, target_info, run_output)
+        self.outputs_so_far.append(output)
+        self._generate_dat(outputs_so_far, run_output)
+        if not self.artifact_added:
+            output.add_artifact('run_result_gnuplot_dat', 'results.dat', 'export')
+            self.artifact_added = True
 
     def process_run_output(self, output, target_info):  # pylint: disable=unused-argument
-        # Pass through to csvproc
-        super(GNUPlotProcessor, self).process_run_output(output, target_info)
+        pass # TODO
         
     def _generate_dat(self, outputs, output):
         outfile = output.get_path('results.dat')
@@ -66,7 +68,7 @@ class GNUPlotProcessor(OutputProcessor):
                     job_benchmark = [o.label]
                     for metric in o.result.metrics:
                         row = (job_benchmark + [str(metric.value), metric.units or ''])
-                        print(row, file=f)
+                        print(*row, file=f)
                 else:
                     raise RuntimeError(
                         'job type {} unrecognised by gnuplot processor'.format(o.kind))
@@ -78,11 +80,9 @@ class GNUPlotProcessor(OutputProcessor):
         sendcmd("set title '{}'\n".format(plot_title))
         sendcmd("set xlabel 'Workload Label'\n")
         sendcmd("set ylabel 'Metric Value'\n")
-        outfile = output.get_path('results.dat')
-        with open(outfile, 'r') as f:
-            sendcmd('plot "results.dat" using 2:xtics(1) with bars\n')
-            sendcmd('pause -1 "Hit <Enter> to exit\n')
-            sendcmd('exit\n')
+        sendcmd('plot "results.dat" using 2:xtics(1) with bars\n')
+        sendcmd('pause -1 "Hit <Enter> to exit"\n')
+        sendcmd('exit\n')
             
         
 

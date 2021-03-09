@@ -1,4 +1,4 @@
-#    Copyright 2018 ARM Limited
+#    Copyright 2021 ARM Limited
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 # Description:
 #   This is a derivative of the csvproc parser to additionally generate graphs using GNUplot
 #   This is an extension of work done for the auto-generation of plots from SPEC results
-#   completed in the Applied Technology team <Benjamin.Mordaunt@arm.com>
 
 from wa import Parameter, OutputProcessor
-from wa.framewok.exception import ConfigError, OutputProcessorError
+from wa.framework.exception import ConfigError, OutputProcessorError
 from wa.utils.types import list_of_strings
 import subprocess
 

@@ -38,7 +38,14 @@ class GNUPlotProcessor(OutputProcessor):
                     description="""
                     Sets the output plot title.
                     
-                    """)
+                    """),
+        Parameter('do_plot', kind=bool, default=True,
+                    global_alias='do_plot',
+                    description="""
+                    Enables running of gnuplot on local machine.
+                    Disable this to generate the DAT file only.
+                    
+                    """
     ]
     
     def __init__(self, *args, **kwargs):
@@ -48,7 +55,7 @@ class GNUPlotProcessor(OutputProcessor):
         
     def validate(self):
         super(GNUPlotProcessor, self).validate()
-        if which('gnuplot') is None:
+        if self.do_plot and which('gnuplot') is None:
             raise RuntimeError('gnuplot was not found in PATH')
         
     # pylint: disable=unused-argument
@@ -58,7 +65,8 @@ class GNUPlotProcessor(OutputProcessor):
         if not self.artifact_added:
             run_output.add_artifact('run_result_gnuplot_dat', 'results.dat', 'export')
             self.artifact_added = True
-        self._do_plot()
+        if self.do_plot:
+            self._do_plot()
 
     def process_run_output(self, output, target_info):  # pylint: disable=unused-argument
         pass # TODO

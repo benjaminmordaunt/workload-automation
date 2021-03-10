@@ -45,7 +45,7 @@ class GNUPlotProcessor(OutputProcessor):
                     Enables running of gnuplot on local machine.
                     Disable this to generate the DAT file only.
                     
-                    """
+                    """)
     ]
     
     def __init__(self, *args, **kwargs):

@@ -20,6 +20,7 @@
 from wa import Parameter, OutputProcessor
 from wa.framework.exception import ConfigError
 from wa.utils.types import list_of_strings
+from shutil import which
 import subprocess
 
 class GNUPlotProcessor(OutputProcessor):
@@ -48,13 +49,15 @@ class GNUPlotProcessor(OutputProcessor):
         
     def validate(self):
         super(GNUPlotProcessor, self).validate()
+        if which('gnuplot') is None:
+            raise RuntimeError('gnuplot was not found in PATH')
         
     # pylint: disable=unused-argument
     def process_job_output(self, output, target_info, run_output):
         self.outputs_so_far.append(output)
         self._generate_dat(outputs_so_far, run_output)
         if not self.artifact_added:
-            output.add_artifact('run_result_gnuplot_dat', 'results.dat', 'export')
+            run_output.add_artifact('run_result_gnuplot_dat', 'results.dat', 'export')
             self.artifact_added = True
 
     def process_run_output(self, output, target_info):  # pylint: disable=unused-argument

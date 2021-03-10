@@ -38,8 +38,7 @@ class GNUPlotProcessor(OutputProcessor):
                     description="""
                     Sets the output plot title.
                     
-                    """),
-        Parameter
+                    """)
     ]
     
     def __init__(self, *args, **kwargs):
@@ -59,6 +58,7 @@ class GNUPlotProcessor(OutputProcessor):
         if not self.artifact_added:
             run_output.add_artifact('run_result_gnuplot_dat', 'results.dat', 'export')
             self.artifact_added = True
+        self._do_plot()
 
     def process_run_output(self, output, target_info):  # pylint: disable=unused-argument
         pass # TODO
@@ -76,7 +76,7 @@ class GNUPlotProcessor(OutputProcessor):
                     raise RuntimeError(
                         'job type {} unrecognised by gnuplot processor'.format(o.kind))
                         
-    def _do_plot(self, output):
+    def _do_plot(self):
         self.gp = subprocess.Popen(['gnuplot', '-p'], shell=True, stdin=subprocess.PIPE)
         sendcmd = self.gp.stdin.write
         

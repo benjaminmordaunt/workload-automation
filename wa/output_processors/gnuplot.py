@@ -88,7 +88,7 @@ class GNUPlotProcessor(OutputProcessor):
         self.gp = subprocess.Popen(['gnuplot', '-p'], shell=True, stdin=subprocess.PIPE)
         sendcmd = self.gp.stdin.write
         
-        sendcmd(b"set title '{}'\n".format(plot_title))
+        sendcmd(f"set title '{plot_title}'\n".encode())
         sendcmd(b"set xlabel 'Workload Label'\n")
         sendcmd(b"set ylabel 'Metric Value'\n")
         sendcmd(b'plot "results.dat" using 2:xtics(1) with bars\n')

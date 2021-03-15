@@ -78,7 +78,7 @@ class GNUPlotProcessor(OutputProcessor):
                 if o.kind == 'job':  # For the moment, only handle individual jobs
                     job_benchmark = [o.label]
                     for metric in o.result.metrics:
-                        row = (job_benchmark + [str(metric.value), metric.units or ''])
+                        row = (job_benchmark + [str(metric.value)])
                         print(*row, file=f)
                 else:
                     raise RuntimeError(

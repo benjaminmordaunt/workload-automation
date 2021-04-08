@@ -61,7 +61,7 @@ class GNUPlotProcessor(OutputProcessor):
     # pylint: disable=unused-argument
     def process_job_output(self, output, target_info, run_output):
         self.outputs_so_far.append(output)
-        self._generate_dat(outputs_so_far, run_output)
+        self._generate_dat(self.outputs_so_far, run_output)
         if not self.artifact_added:
             run_output.add_artifact('run_result_gnuplot_dat', 'results.dat', 'export')
             self.artifact_added = True
